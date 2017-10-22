@@ -100,7 +100,7 @@ public class`;
     // certainFile.replace("import", newImport);
     const newContent = certainFile.content.split("\n").slice(0, 2)
         .concat(newImport
-            .concat(certainFile.content.split("\n").slice(3)))
+            .concat(certainFile.content.split("\n").slice(2)))
         .reduce((a, b) => a + "\n" + b);
     certainFile.setContent(newContent);
 
