@@ -1,9 +1,10 @@
+import {File} from "@atomist/rug/model/File";
 import {Project} from "@atomist/rug/model/Project";
-import {JavaClassOrInterface} from "@atomist/rug/model/JavaClassOrInterface";
 import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
+import {functions} from "./Functions";
 
 /**
  * AddLicense editor
@@ -64,60 +65,31 @@ export function updatePom(project: Project): void {
     // }
     console.error("begin");
 
-    // eng.with<JavaClassOrInterface>(project, "/module1/src/main/java/bean/Person.java", javaClass => {
-    //     console.error("errorLogging1");
-    //     console.error(javaClass.name);
-    //     javaClass.addAnnotation(javaClass.pkg, "@Builder");
-    // });
     const targetFile = "src/main/java/Adres.java";
 
-    const certainFile = project.findFile(targetFile);
+    const certainFile: File = project.findFile(targetFile);
     if (certainFile === null) {
         console.error("File not found");
     }
 
     ////////////////////////////////////////
     // AddFunction
-    const newFunction = `
-    // @Input
-
+    const newFunction: string = `
     public Long findNumberOfBeans() {
         return getObjectCount();
     }
-`;
-    // certainFile.replace("// @Input", newFunction);
+    `;
+    functions.addFunction(certainFile, newFunction);
 
     ////////////////////////////////////////
     // AddAnnotationToClass
-    const newAnnotation = `@Getter
-public class`;
-    // certainFile.replace("public class", newAnnotation);
+    const newAnnotation = "@Getter";
+    functions.addAnnotationToClass(certainFile, newAnnotation);
 
     /////////////////////////////////////////
     // Add import
-    const newImport = ["import lombok.getter;"];
-
-    // certainFile.replace("import", newImport);
-    const newContent = certainFile.content.split("\n").slice(0, 2)
-        .concat(newImport
-            .concat(certainFile.content.split("\n").slice(2)))
-        .reduce((a, b) => a + "\n" + b);
-    certainFile.setContent(newContent);
-
-
-
-
-
-////////////////////////////
-
-    // project.context.pathExpressionEngine.with<JavaClassOrInterface>(project,
-    //     `/module1/src/main/java/Person.java/JavaClassOrInterface()`, java => {
-    //         console.error(java.isInterface);
-    //         java.addAnnotation("javax.persistence", "Entity");
-    //     });
-
-    // const newContent = certainFile.content + newFunction;
-    // certainFile.setContent(newContent);
+    const newImport = "lombok.getter";
+    functions.addImport(certainFile, newImport);
 
     console.error("end");
 
