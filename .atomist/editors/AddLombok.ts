@@ -69,13 +69,14 @@ export function updatePom(project: Project): void {
     //     console.error(javaClass.name);
     //     javaClass.addAnnotation(javaClass.pkg, "@Builder");
     // });
-    const targetFile = "module1/src/main/java/Adres.java";
+    const targetFile = "src/main/java/Adres.java";
 
     const certainFile = project.findFile(targetFile);
     if (certainFile === null) {
         console.error("File not found");
     }
 
+    // AddFunction
     const newFunction = `
     // @Input
 
@@ -83,7 +84,15 @@ export function updatePom(project: Project): void {
         return getObjectCount();
     }
 `;
-    certainFile.replace("// @Input", newFunction);
+    //certainFile.replace("// @Input", newFunction);
+
+    //AddAnnotationToClass
+    const newAnnotation = `@Getter
+public class`;
+    //certainFile.replace("public class", newAnnotation);
+
+    // Add import
+
 
 ////////////////////////////
 
