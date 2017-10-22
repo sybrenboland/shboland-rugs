@@ -76,6 +76,7 @@ export function updatePom(project: Project): void {
         console.error("File not found");
     }
 
+    ////////////////////////////////////////
     // AddFunction
     const newFunction = `
     // @Input
@@ -84,14 +85,27 @@ export function updatePom(project: Project): void {
         return getObjectCount();
     }
 `;
-    //certainFile.replace("// @Input", newFunction);
+    // certainFile.replace("// @Input", newFunction);
 
-    //AddAnnotationToClass
+    ////////////////////////////////////////
+    // AddAnnotationToClass
     const newAnnotation = `@Getter
 public class`;
-    //certainFile.replace("public class", newAnnotation);
+    // certainFile.replace("public class", newAnnotation);
 
+    /////////////////////////////////////////
     // Add import
+    const newImport = ["import lombok.getter;"];
+
+    // certainFile.replace("import", newImport);
+    const newContent = certainFile.content.split("\n").slice(0, 2)
+        .concat(newImport
+            .concat(certainFile.content.split("\n").slice(3)))
+        .reduce((a, b) => a + "\n" + b);
+    certainFile.setContent(newContent);
+
+
+
 
 
 ////////////////////////////
