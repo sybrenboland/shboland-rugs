@@ -83,18 +83,15 @@ export function updatePom(project: Project): void {
         return getObjectCount();
     }
 `;
+    certainFile.replace("// @Input", newFunction);
 
-    const targetFile2 = "module1/src/main/java/Person.java";
+////////////////////////////
 
-    const certainFile2 = project.findFile(targetFile);
-    if (certainFile === null) {
-        console.error("File not found");
-    }
-
-    const javaFile = project.context.pathExpressionEngine.with<JavaClassOrInterface>(project,
-        `/module1/src/main/java/Person.java/Java()`, java => {
-            console.error(java.isInterface);
-        });
+    // project.context.pathExpressionEngine.with<JavaClassOrInterface>(project,
+    //     `/module1/src/main/java/Person.java/JavaClassOrInterface()`, java => {
+    //         console.error(java.isInterface);
+    //         java.addAnnotation("javax.persistence", "Entity");
+    //     });
 
     // const newContent = certainFile.content + newFunction;
     // certainFile.setContent(newContent);
