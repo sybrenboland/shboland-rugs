@@ -11,9 +11,9 @@ import {functions} from "./Functions";
  * - Adds maven dependency (if not present)
  * -
  */
-@Editor("AddLombok", "adds ")
+@Editor("AddProbeersel", "adds ")
 @Tags("rug", "lombok", "maven", "shboland")
-export class AddLombok implements EditProject {
+export class AddProbeersel implements EditProject {
     @Parameter({
         displayName: "Module name",
         description: "Name of the module we want to add",
@@ -63,8 +63,36 @@ export function updatePom(project: Project): void {
     //         pom.addOrReplaceDependency("org.projectlombok", "lombok");
     //     });
     // }
+    console.error("begin");
 
+    const targetFile = "src/main/java/Adres.java";
+
+    const certainFile: File = project.findFile(targetFile);
+    if (certainFile === null) {
+        console.error("File not found");
+    }
+
+    ////////////////////////////////////////
+    // AddFunction
+    const newFunction: string = `
+    public Long findNumberOfBeans() {
+        return getObjectCount();
+    }
+    `;
+    functions.addFunction(certainFile, newFunction);
+
+    ////////////////////////////////////////
+    // AddAnnotationToClass
+    const newAnnotation = "@Getter";
+    functions.addAnnotationToClass(certainFile, newAnnotation);
+
+    /////////////////////////////////////////
+    // Add import
+    const newImport = "lombok.getter";
+    functions.addImport(certainFile, newImport);
+
+    console.error("end");
 
 }
 
-export const addLombok = new AddLombok();
+export const addProbeersel = new AddProbeersel();
