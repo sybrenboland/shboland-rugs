@@ -4,7 +4,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {functions} from "./JavaClassFunctions";
+import {javaFunctions} from "./JavaClassFunctions";
 
 /**
  * AddLicense editor
@@ -79,17 +79,17 @@ export function updatePom(project: Project): void {
         return getObjectCount();
     }
     `;
-    functions.addFunction(certainFile, newFunction);
+    javaFunctions.addFunction(certainFile, newFunction);
 
     ////////////////////////////////////////
     // AddAnnotationToClass
     const newAnnotation = "@Getter";
-    functions.addAnnotationToClass(certainFile, newAnnotation);
+    javaFunctions.addAnnotationToClass(certainFile, newAnnotation);
 
     /////////////////////////////////////////
     // Add import
     const newImport = "lombok.getter";
-    functions.addImport(certainFile, newImport);
+    javaFunctions.addImport(certainFile, newImport);
 
     console.error("end");
 

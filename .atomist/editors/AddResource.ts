@@ -1,4 +1,4 @@
-import {File} from "@atomist/rug/model/File";
+import {Pom} from "@atomist/rug/model/Pom";
 import {Project} from "@atomist/rug/model/Project";
 import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
@@ -7,83 +7,107 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 
 /**
  * AddResource editor
- * - Adds GET resource for given bean.
+ * - Adds maven dependencies
+ * - Adds resource shell class and interface
  */
-@Editor("AddResource", "adds GET resource for given bean")
-@Tags("rug", "shboland", "resource", "spring", "rest")
+@Editor("AddResource", "adds resource class and interface")
+@Tags("rug", "api", "resource", "shboland")
 export class AddResource implements EditProject {
     @Parameter({
-        displayName: "Bean Name",
-        description: "name for the bean class",
+        displayName: "Class name",
+        description: "Name of the class we want to add",
         pattern: Pattern.java_class,
-        validInput: "a valid Java class name",
+        validInput: "Java class name",
         minLength: 1,
-        maxLength: 50
+        maxLength: 100,
+        required: true,
     })
-    bean_name: string;
+    public className: string;
 
     @Parameter({
-        displayName: "Module Name",
-        description: "name for the module of the project",
+        displayName: "Base package name",
+        description: "Name of the base package in witch we want to add",
         pattern: Pattern.java_package,
-        validInput: "a valid package name",
-        minLength: 1,
-        maxLength: 50
+        validInput: "Java package name",
+        minLength: 0,
+        maxLength: 100,
+        required: true,
     })
-    module: string;
+    public basePackage: string;
 
     @Parameter({
-        displayName: "Package name",
-        description: "name for the base package of the organisation",
-        pattern: Pattern.java_package,
-        validInput: "a valid package name",
-        minLength: 1,
-        maxLength: 50
+        displayName: "Module name",
+        description: "Name of the module we want to add",
+        pattern: Pattern.any,
+        validInput: "Name",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
     })
-    org_package: string;
+    public module: string = "api";
 
     public edit(project: Project) {
-        this.findOrCreateResourceFile();
-        this.addResourceCode();
-        this.checkOrAddDependencies();
 
-        const rawJavaFileContent = `package org.shboland.api.resource;
+        const basePath = this.module + "/src/main/java/" + this.basePackage.replace("\.", "/");
 
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-@Path("/v1/${this.bean_name.toLowerCase()}s")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-@Component("${this.bean_name.toLowerCase()}Resource")
-public class BeanResource {
-
-    @GET
-    @Path("/{${this.bean_name.toLowerCase()}Id}")
-    public Response get(@PathParam("${this.bean_name.toLowerCase()}Id") Long ${this.bean_name.toLowerCase()}Id) {
-
-        return Response.ok("success!").build();
+        this.addDependencies(project);
+        this.addResourceInterface(project, basePath);
+        this.addResourceClass(project, basePath);
     }
+
+    private addDependencies(project: Project): void {
+        const eng: PathExpressionEngine = project.context.pathExpressionEngine;
+
+        eng.with<Pom>(project, "/Pom()", pom => {
+            pom.addOrReplaceDependency("org.springframework.boot", "spring-boot-starter-web");
+        });
+    }
+
+    private addResourceInterface(project: Project, basePath: string): void {
+
+        const rawJavaFileContent = `package ${this.basePackage + ".resource"};
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RequestMapping("/${this.className.toLowerCase()}s")
+public interface I${this.className}Controller {
+
+    // @Input
+    
 }`;
 
-        project.addFile(`${this.module + "/"}api/src/main/java/${this.org_package}/api/resource/${this.bean_name}Resource.java`, rawJavaFileContent);
+        const pathInterface = basePath + "/resource/I" + this.className + "Controller.java";
+        if (!project.fileExists(pathInterface)) {
+            project.addFile(pathInterface, rawJavaFileContent);
+        }
     }
 
-    private findOrCreateResourceFile() {
-        return undefined;
-    }
+    private addResourceClass(project: Project, basePath: string): void {
 
-    private addResourceCode() {
-        return undefined;
-    }
+        const rawJavaFileContent = `package ${this.basePackage}.resource;
 
-    private checkOrAddDependencies() {
-        return undefined;
+import ${this.basePackage}.service.${this.className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ${this.className}Controller implements I${this.className}Controller {
+
+    private final ${this.className}Service ${this.className.toLowerCase()}Service;
+
+    @Autowired
+    public ${this.className}Controller(${this.className}Service ${this.className.toLowerCase()}Service) {
+        this.${this.className.toLowerCase()}Service = ${this.className.toLowerCase()}Service;
+    }
+    
+    // @Input
+    
+}`;
+
+        const pathClass = basePath + "/resource/" + this.className + "Controller.java";
+        if (!project.fileExists(pathClass)) {
+            project.addFile(pathClass, rawJavaFileContent);
+        }
     }
 }
 
