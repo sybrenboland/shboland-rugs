@@ -1,10 +1,12 @@
 import {File} from "@atomist/rug/model/File";
+import {Pom} from "@atomist/rug/model/Pom";
 import {Project} from "@atomist/rug/model/Project";
 import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {functions} from "./JavaClassFunctions";
+import {fileFunctions} from "./FileFunctions";
+import {javaFunctions} from "./JavaClassFunctions";
 
 /**
  * AddLicense editor
@@ -23,48 +25,64 @@ export class AddLombok implements EditProject {
         maxLength: 100,
         required: false,
     })
-    public moduleName: string;
+    public module: string;
 
     @Parameter({
-        displayName: "Qualified name bean",
-        description: "package + bean.java",
+        displayName: "Path to file",
+        description: "Path from project root to target java class file",
         pattern: Pattern.any,
-        validInput: "Fully qualified name of the bean",
+        validInput: "Relative path vb: persistence/src/main/java/Adres.java",
         minLength: 1,
         maxLength: 100,
-        required: false,
+        required: true,
     })
-    public beanPackage: string;
+    public pathToClass: string;
 
     public edit(project: Project) {
-        updatePom(project);
+        const file: File = fileFunctions.findFile(project, this.pathToClass);
 
+        this.addDependencies(project);
+        this.addImports(file);
+        this.addAnnotations(file);
     }
-}
 
-export function updatePom(project: Project): void {
+    private addDependencies(project: Project): void {
+        // Master pom
+        const lombokDependency = `            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.18</version>
+                <scope>provided</scope>
+            </dependency>`;
 
-    const eng: PathExpressionEngine = project.context.pathExpressionEngine;
+        const eng: PathExpressionEngine = project.context.pathExpressionEngine;
 
-    // eng.with<Pom>(project, "/Pom()", pom => {
-    //     pom.addOrReplaceDependencyManagementDependency(
-    //         "org.projectlombok",
-    //         "lombok",
-    //         "<dependency> " +
-    //         "<groupId>org.projectlombok</groupId> " +
-    //         "<artifactId>lombok</artifactId> " +
-    //         "<version>1.16.18</version> " +
-    //         "</dependency>",
-    //     );
-    // });
+        eng.with<Pom>(project, "/Pom()", pom => {
+            pom.addOrReplaceDependencyManagementDependency("org.projectlombok", "lombok", lombokDependency);
+        });
 
-    // if (this.moduleName != null) {
-    //     eng.with<Pom>(project, "module1/Pom()", pom => {
-    //         pom.addOrReplaceDependency("org.projectlombok", "lombok");
-    //     });
-    // }
+        // Module pom
+        const targetFilePath = this.module + "/pom.xml";
+        const modulePomFile: File = fileFunctions.findFile(project, targetFilePath);
 
+        eng.with<Pom>(modulePomFile, "/Pom()", pom => {
+            pom.addOrReplaceDependency("org.projectlombok", "lombok");
+        });
+    }
 
+    private addImports(file: File): void {
+        javaFunctions.addImport(file, "lombok.Getter");
+        javaFunctions.addImport(file, "lombok.Setter");
+        javaFunctions.addImport(file, "lombok.Builder");
+        javaFunctions.addImport(file, "lombok.NoArgsConstructor");
+    }
+
+    private addAnnotations(file: File): void {
+        javaFunctions.addAnnotationToClass(file, "@Getter");
+        javaFunctions.addAnnotationToClass(file, "@Setter");
+        javaFunctions.addAnnotationToClass(file, "@Builder");
+        javaFunctions.addAnnotationToClass(file, "@NoArgsConstructor");
+    }
 }
 
 export const addLombok = new AddLombok();

@@ -1,6 +1,6 @@
 import {File} from "@atomist/rug/model/File";
 
-export class Functions {
+export class JavaClassFunctions {
 
     public addFunction(file: File, newFunction: string): void {
         const functionInput = "// @Input";
@@ -28,4 +28,4 @@ export class Functions {
     }
 }
 
-export const functions = new Functions();
+export const javaFunctions = new JavaClassFunctions();

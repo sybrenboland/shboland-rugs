@@ -43,7 +43,7 @@ export class AddBeanClass implements EditProject {
         maxLength: 100,
         required: false,
     })
-    public moduleName: string = "persistence";
+    public module: string = "persistence";
 
     @Parameter({
         displayName: "Release",
@@ -58,7 +58,7 @@ export class AddBeanClass implements EditProject {
 
     public edit(project: Project) {
 
-        const basePath = this.moduleName + "/src/main";
+        const basePath = this.module + "/src/main";
         const pathClass = basePath + "/java/" + this.basePackage.replace("\.", "/")
             + "/db/hibernate/bean/" + this.className + ".java";
         const pathChangeset = basePath + "/resources/liquibase/" + this.release + "/create-"
