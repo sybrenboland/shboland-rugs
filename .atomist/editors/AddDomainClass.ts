@@ -51,7 +51,7 @@ export class AddBeanClass implements EditProject {
     public edit(project: Project) {
 
         const basePath = this.module + "/src/main";
-        const pathClass = basePath + "/java/" + this.basePackage.replace("\.", "/")
+        const pathClass = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
             + "/domain/" + this.className + ".java";
 
         this.addDependencies(project);

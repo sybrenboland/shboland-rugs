@@ -44,7 +44,7 @@ export class AddConverter implements EditProject {
     public module: string = "api";
 
     public edit(project: Project) {
-        const basePath = this.module + "/src/main/java/" + this.basePackage.replace("\.", "/");
+        const basePath = this.module + "/src/main/java/" + this.basePackage.replace(/\./gi, "/");
 
         this.addConverterClass(project, basePath);
     }

@@ -48,7 +48,7 @@ export class AddRepository implements EditProject {
 
     public edit(project: Project) {
 
-        const basePath = this.module + "/src/main/java/" + this.basePackage.replace("\.", "/");
+        const basePath = this.module + "/src/main/java/" + this.basePackage.replace(/\./gi, "/");
 
         this.addDependencies(project);
         this.addConverterClass(project, basePath);
