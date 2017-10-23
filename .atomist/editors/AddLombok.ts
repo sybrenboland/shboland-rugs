@@ -9,9 +9,10 @@ import {fileFunctions} from "./FileFunctions";
 import {javaFunctions} from "./JavaClassFunctions";
 
 /**
- * AddLicense editor
- * - Adds maven dependency (if not present)
- * -
+ * AddLombok editor
+ * - Adds maven dependencies
+ * - Adds imports
+ * - Adds Annotations
  */
 @Editor("AddLombok", "adds ")
 @Tags("rug", "lombok", "maven", "shboland")

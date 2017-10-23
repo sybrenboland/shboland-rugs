@@ -7,7 +7,9 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 
 /**
  * AddBeanClass editor
+ * - Adds maven dependencies
  * - Adds hibernate bean class
+ * - Adds liquibase changeset
  */
 @Editor("AddBeanClass", "adds hibernate bean class")
 @Tags("rug", "hibernate", "bean", "shboland")
