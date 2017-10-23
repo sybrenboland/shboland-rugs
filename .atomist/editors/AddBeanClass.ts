@@ -1,7 +1,9 @@
-import { Project } from "@atomist/rug/model/Project";
-import { Editor, Parameter, Tags } from "@atomist/rug/operations/Decorators";
-import { EditProject } from "@atomist/rug/operations/ProjectEditor";
-import { Pattern } from "@atomist/rug/operations/RugOperation";
+import {Pom} from "@atomist/rug/model/Pom";
+import {Project} from "@atomist/rug/model/Project";
+import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
+import {EditProject} from "@atomist/rug/operations/ProjectEditor";
+import {Pattern} from "@atomist/rug/operations/RugOperation";
+import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 
 /**
  * AddBeanClass editor
@@ -41,7 +43,7 @@ export class AddBeanClass implements EditProject {
         maxLength: 100,
         required: false,
     })
-    public moduleName: string;
+    public moduleName: string = "persistence";
 
     @Parameter({
         displayName: "Release",
@@ -56,13 +58,28 @@ export class AddBeanClass implements EditProject {
 
     public edit(project: Project) {
 
-        const beanPackage = "db.hibernate.bean";
         const basePath = this.moduleName + "/src/main";
         const pathClass = basePath + "/java/" + this.basePackage.replace("\.", "/")
             + "/db/hibernate/bean/" + this.className + ".java";
         const pathChangeset = basePath + "/resources/liquibase/" + this.release + "/create-"
             + this.className.toLowerCase() + ".xml";
 
+        this.addDependencies(project);
+        this.addBeanClass(project, pathClass);
+        this.addChangeSet(project, pathChangeset);
+    }
+
+    private addDependencies(project: Project): void {
+        const eng: PathExpressionEngine = project.context.pathExpressionEngine;
+
+        eng.with<Pom>(project, "/Pom()", pom => {
+            pom.addOrReplaceDependency("org.springframework.boot", "spring-boot-starter-data-jpa");
+        });
+    }
+
+    private addBeanClass(project: Project, pathClass: string): void {
+
+        const beanPackage = "db.hibernate.bean";
         const rawJavaFileContent = `package ${this.basePackage + "." + beanPackage};
 
 import javax.persistence.*;
@@ -75,24 +92,31 @@ public class ${this.className} {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    
+    // @Input
+    
 }`;
-        const rawChangesetContent = "<databaseChangeLog xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\"\n" +
-            "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-            "  xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog\n" +
-            "                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd\">\n" +
-            " \n" +
-            "  <changeSet id=\"create_${this.className.toLowerCase()}\" author=\"shboland\">\n" +
-            "    <createTable tableName=\"${this.className.toUpperCase()}\">\n" +
-            "      <column name=\"id\" type=\"int\">\n" +
-            "        <constraints primaryKey=\"true\" nullable=\"false\" />\n" +
-            "      </column>\n" +
-            "    </createTable>\n" +
-            "  </changeSet>\n" +
-            "</databaseChangeLog>";
 
         if (!project.fileExists(pathClass)) {
             project.addFile(pathClass, rawJavaFileContent);
         }
+    }
+
+    private addChangeSet(project: Project, pathChangeset: string): void {
+
+        const rawChangesetContent = `<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+ 
+  <changeSet id="create_${this.className.toLowerCase()}" author="shboland">
+    <createTable tableName="${this.className.toUpperCase()}">
+      <column name="id" type="int" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>`;
 
         if (!project.fileExists(pathChangeset)) {
             project.addFile(pathChangeset, rawChangesetContent);
