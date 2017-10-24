@@ -63,7 +63,7 @@ export class AddBeanClass implements EditProject {
         const basePath = this.module + "/src/main";
         const pathClass = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
             + "/db/hibernate/bean/" + this.className + ".java";
-        const pathChangeset = basePath + "/resources/liquibase/" + this.release + "/create-"
+        const pathChangeset = basePath + "/resources/liquibase/release/" + this.release + "/create-"
             + this.className.toLowerCase() + ".xml";
 
         this.addDependencies(project);
