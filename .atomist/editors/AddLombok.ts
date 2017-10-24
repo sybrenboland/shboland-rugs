@@ -18,17 +18,6 @@ import {javaFunctions} from "./JavaClassFunctions";
 @Tags("rug", "lombok", "maven", "shboland")
 export class AddLombok implements EditProject {
     @Parameter({
-        displayName: "Module name",
-        description: "Name of the module we want to add",
-        pattern: Pattern.any,
-        validInput: "Name",
-        minLength: 0,
-        maxLength: 100,
-        required: false,
-    })
-    public module: string;
-
-    @Parameter({
         displayName: "Path to file",
         description: "Path from project root to target java class file",
         pattern: Pattern.any,
@@ -74,7 +63,8 @@ export class AddLombok implements EditProject {
         });
 
         // Module pom
-        const targetFilePath = this.module + "/pom.xml";
+        const module = this.pathToClass.split("/src")[0];
+        const targetFilePath = module + "/pom.xml";
         const modulePomFile: File = fileFunctions.findFile(project, targetFilePath);
 
         eng.with<Pom>(modulePomFile, "/Pom()", pom => {
@@ -86,7 +76,9 @@ export class AddLombok implements EditProject {
         javaFunctions.addImport(file, "lombok.Getter");
         javaFunctions.addImport(file, "lombok.Setter");
         javaFunctions.addImport(file, "lombok.Builder");
+        javaFunctions.addImport(file, "lombok.AccessLevel");
         javaFunctions.addImport(file, "lombok.NoArgsConstructor");
+        javaFunctions.addImport(file, "lombok.AllArgsConstructor");
     }
 
     private addAnnotations(file: File): void {
@@ -94,6 +86,7 @@ export class AddLombok implements EditProject {
         javaFunctions.addAnnotationToClass(file, "@Setter");
         javaFunctions.addAnnotationToClass(file, "@Builder");
         javaFunctions.addAnnotationToClass(file, "@NoArgsConstructor");
+        javaFunctions.addAnnotationToClass(file, "@AllArgsConstructor(access = AccessLevel.PRIVATE)");
     }
 }
 

@@ -14,7 +14,7 @@ import {fileFunctions} from "./FileFunctions";
  */
 @Editor("AddDomainClass", "adds domain class")
 @Tags("rug", "domain", "DTO", "shboland")
-export class AddBeanClass implements EditProject {
+export class AddDomainClass implements EditProject {
     @Parameter({
         displayName: "Class name",
         description: "Name of the class we want to add",
@@ -63,7 +63,7 @@ export class AddBeanClass implements EditProject {
 
         const basePath = this.module + "/src/main";
         const pathClass = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
-            + "/domain/" + this.className + ".java";
+            + "/domain/Json" + this.className + ".java";
 
         this.addDependencies(project);
         this.addDomainClass(project, pathClass);
@@ -105,7 +105,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ${this.className} {
+public class Json${this.className} {
 
     @JsonProperty("id")
     private Long id;
@@ -120,4 +120,4 @@ public class ${this.className} {
     }
 }
 
-export const addBeanClass = new AddBeanClass();
+export const addDomainClass = new AddDomainClass();

@@ -65,7 +65,6 @@ export class AddGET implements EditProject {
         this.addResourceInterfaceMethod(project, basePath);
         this.addResourceClassMethod(project, basePath);
         this.addServiceMethod(project, basePath);
-        this.addConverterMethod(project, basePath);
     }
 
     private addDependencies(project: Project): void {
@@ -133,25 +132,6 @@ export class AddGET implements EditProject {
         javaFunctions.addFunction(file, rawJavaMethod);
 
         javaFunctions.addImport(file, "java.util.Optional");
-        javaFunctions.addImport(file, this.basePackage + ".domain.Json" + this.className);
-        javaFunctions.addImport(file, this.basePackage + ".db.hibernate.bean." + this.className);
-    }
-
-    private addConverterMethod(project: Project, basePath: string): void {
-
-        const rawJavaMethod = `
-    public Json${this.className} toJson(${this.className} ${this.className.toLowerCase()}) {
-        Json${this.className} json${this.className} = new Json${this.className}();
-
-        json${this.className}.setId(${this.className.toLowerCase()}.getId());
-
-        return json${this.className};
-    }`;
-
-        const path = basePath + "/convert/" + this.className + "Converter.java";
-        const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
-
         javaFunctions.addImport(file, this.basePackage + ".domain.Json" + this.className);
         javaFunctions.addImport(file, this.basePackage + ".db.hibernate.bean." + this.className);
     }

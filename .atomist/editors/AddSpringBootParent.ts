@@ -19,9 +19,9 @@ export class SetSpringBootVersion implements EditProject {
         validInput: "Release number",
         minLength: 0,
         maxLength: 100,
-        required: true,
+        required: false,
     })
-    public version: string;
+    public version: string = "1.5.3.RELEASE";
 
     public edit(project: Project) {
         this.setVersionBootParent(project);

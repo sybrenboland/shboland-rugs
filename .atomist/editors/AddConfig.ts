@@ -8,14 +8,28 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 /**
  * AddConfig editor
  * - Adds maven dependencies
+ * - Adds Persistence configuration file
+ * - Adds Domain configuration file
+ * - Adds Api configuration file
  * - Add bootstrap.yml
  */
 @Editor("AddConfig", "adds additional config properties")
 @Tags("rug", "api", "config", "shboland")
 export class AddConfig implements EditProject {
     @Parameter({
-        displayName: "Module name",
-        description: "Name of the module we want to add",
+        displayName: "Base package name",
+        description: "Name of the base package in witch we want to add",
+        pattern: Pattern.java_package,
+        validInput: "Java package name",
+        minLength: 0,
+        maxLength: 100,
+        required: true,
+    })
+    public basePackage: string;
+
+    @Parameter({
+        displayName: "Api module name",
+        description: "Name of the api module",
         pattern: Pattern.any,
         validInput: "Name",
         minLength: 0,
@@ -24,8 +38,33 @@ export class AddConfig implements EditProject {
     })
     public apiModule: string = "api";
 
+    @Parameter({
+        displayName: "Persistence module name",
+        description: "Name of the persistence module",
+        pattern: Pattern.any,
+        validInput: "Name",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public persistenceModule: string = "persistence";
+
+    @Parameter({
+        displayName: "Domain module name",
+        description: "Name of the domain module",
+        pattern: Pattern.any,
+        validInput: "Name",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public domainModule: string = "domain";
+
     public edit(project: Project) {
         this.addDependencies(project);
+        this.addPersistenceConfig(project);
+        this.addDomainConfig(project);
+        this.addApiConfig(project);
         this.addBootstrapYaml(project);
     }
 
@@ -35,6 +74,60 @@ export class AddConfig implements EditProject {
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependency("org.springframework.cloud", "spring-cloud-starter-config");
         });
+    }
+
+    private addPersistenceConfig(project: Project) {
+        const configPath = this.persistenceModule + "/src/main/java/"
+            + this.basePackage.replace(/\./gi, "/") + "/configuration/PersistenceConfiguration.java";
+        const rawJavaFileContent = `package ${this.basePackage}.configuration;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan(basePackages = { "${this.basePackage}.db" })
+public class PersistenceConfiguration {
+}
+`;
+        if (!project.fileExists(configPath)) {
+            project.addFile(configPath, rawJavaFileContent);
+        }
+    }
+
+    private addDomainConfig(project: Project) {
+        const configPath = this.domainModule + "/src/main/java/"
+            + this.basePackage.replace(/\./gi, "/") + "/configuration/DomainConfiguration.java";
+        const rawJavaFileContent = `package ${this.basePackage}.configuration;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan(basePackages = { "${this.basePackage}.domain" })
+public class DomainConfiguration {
+}
+`;
+        if (!project.fileExists(configPath)) {
+            project.addFile(configPath, rawJavaFileContent);
+        }
+    }
+
+    private addApiConfig(project: Project) {
+        const configPath = this.apiModule + "/src/main/java/"
+            + this.basePackage.replace(/\./gi, "/") + "/configuration/ApiConfiguration.java";
+        const rawJavaFileContent = `package ${this.basePackage}.configuration;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@Import({PersistenceConfiguration.class, DomainConfiguration.class})
+public class ApiConfiguration {
+}
+`;
+        if (!project.fileExists(configPath)) {
+            project.addFile(configPath, rawJavaFileContent);
+        }
     }
 
     private addBootstrapYaml(project: Project): void {
