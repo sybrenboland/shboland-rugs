@@ -36,6 +36,28 @@ export class AddLiquibase implements EditProject {
     })
     public persistenceModule: string = "persistence";
 
+    @Parameter({
+        displayName: "Version",
+        description: "Version of liquibase",
+        pattern: Pattern.any,
+        validInput: "Release number",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public liquibaseVersion: string = "3.5.3";
+
+    @Parameter({
+        displayName: "Version",
+        description: "Version of postgres driver",
+        pattern: Pattern.any,
+        validInput: "Release number",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public postgresVersion: string = "9.1-901.jdbc4";
+
     public edit(project: Project) {
         this.addDependencies(project);
         this.addApplicationYaml(project);
@@ -50,7 +72,7 @@ export class AddLiquibase implements EditProject {
         const liquibaseDependency = `            <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
-                <version>3.5.3</version>
+                <version>${this.liquibaseVersion}</version>
                 <scope>runtime</scope>
             </dependency>`;
 
@@ -61,7 +83,7 @@ export class AddLiquibase implements EditProject {
         const postgresDependency = `            <dependency>
                 <groupId>postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>9.1-901.jdbc4</version>
+                <version>${this.postgresVersion}</version>
                 <scope>runtime</scope>
             </dependency>`;
 

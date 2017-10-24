@@ -39,6 +39,17 @@ export class AddLombok implements EditProject {
     })
     public pathToClass: string;
 
+    @Parameter({
+        displayName: "Version",
+        description: "Version of lombok",
+        pattern: Pattern.any,
+        validInput: "Release number",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public version: string = "1.16.18";
+
     public edit(project: Project) {
         const file: File = fileFunctions.findFile(project, this.pathToClass);
 
@@ -52,7 +63,7 @@ export class AddLombok implements EditProject {
         const lombokDependency = `            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.18</version>
+                <version>${this.version}</version>
                 <scope>provided</scope>
             </dependency>`;
 

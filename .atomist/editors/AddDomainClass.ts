@@ -48,6 +48,17 @@ export class AddBeanClass implements EditProject {
     })
     public module: string = "domain";
 
+    @Parameter({
+        displayName: "Version",
+        description: "Version of jackson",
+        pattern: Pattern.any,
+        validInput: "Release number",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public version: string = "2.9.2";
+
     public edit(project: Project) {
 
         const basePath = this.module + "/src/main";
@@ -63,7 +74,7 @@ export class AddBeanClass implements EditProject {
         const jacksonDependency = `            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.9.2</version>
+                <version>${this.version}</version>
             </dependency>`;
 
         const eng: PathExpressionEngine = project.context.pathExpressionEngine;

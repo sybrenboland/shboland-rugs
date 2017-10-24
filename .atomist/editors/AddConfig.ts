@@ -8,8 +8,9 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 /**
  * AddConfig editor
  * - Adds maven dependencies
+ * - Add bootstrap.yml
  */
-@Editor("AddConfig", "adds REST get method")
+@Editor("AddConfig", "adds additional config properties")
 @Tags("rug", "api", "config", "shboland")
 export class AddConfig implements EditProject {
     @Parameter({
