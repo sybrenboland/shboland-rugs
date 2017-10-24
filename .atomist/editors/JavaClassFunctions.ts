@@ -5,7 +5,7 @@ export class JavaClassFunctions {
     public addFunction(file: File, newFunction: string): void {
         const functionInput = "// @Input";
 
-        file.replace(functionInput, functionInput + "\n\n" + newFunction);
+        file.replace(functionInput, functionInput + "\n" + newFunction);
     }
 
     public addAnnotationToClass(file: File, newAnnotation: string): void {
@@ -17,14 +17,16 @@ export class JavaClassFunctions {
     }
 
     public addImport(file: File, newImport: string): void {
-        const newImportInput = ["import " + newImport + ";"];
+        if (!file.contains(newImport)) {
+            const newImportInput = ["import " + newImport + ";"];
 
-        const newContent = file.content.split("\n").slice(0, 2)
-            .concat(newImportInput
-                .concat(file.content.split("\n").slice(2)))
-            .reduce((a, b) => a + "\n" + b);
+            const newContent = file.content.split("\n").slice(0, 2)
+                .concat(newImportInput
+                    .concat(file.content.split("\n").slice(2)))
+                .reduce((a, b) => a + "\n" + b);
 
-        file.setContent(newContent);
+            file.setContent(newContent);
+        }
     }
 }
 
