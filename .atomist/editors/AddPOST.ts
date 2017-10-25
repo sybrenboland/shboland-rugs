@@ -83,7 +83,7 @@ export class AddPOST implements EditProject {
 
         const path = basePath + "/resource/I" + this.className + "Controller.java";
         const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
+        javaFunctions.addFunction(file, "post" + this.className, rawJavaMethod);
 
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestBody");
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestMethod");
@@ -109,7 +109,7 @@ export class AddPOST implements EditProject {
 
         const path = basePath + "/resource/" + this.className + "Controller.java";
         const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
+        javaFunctions.addFunction(file, "post" + this.className, rawJavaMethod);
 
         javaFunctions.addImport(file, "java.net.URI");
         javaFunctions.addImport(file, "org.springframework.web.servlet.support.ServletUriComponentsBuilder");
@@ -130,7 +130,7 @@ export class AddPOST implements EditProject {
 
         const path = basePath + "/service/" + this.className + "Service.java";
         const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
+        javaFunctions.addFunction(file, "create" + this.className, rawJavaMethod);
 
         javaFunctions.addImport(file, this.basePackage + ".domain.Json" + this.className);
         javaFunctions.addImport(file, this.basePackage + ".db.hibernate.bean." + this.className);

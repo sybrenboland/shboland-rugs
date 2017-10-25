@@ -6,9 +6,11 @@ import {addBeanClass} from "./AddBeanClass";
 import {addConfig} from "./AddConfig";
 import {addConverter} from "./AddConverter";
 import {addDomainClass} from "./AddDomainClass";
-import {addGET} from "./AddGET";
+import {addGet} from "./AddGET";
 import {addLiquibase} from "./AddLiquibase";
 import {addLombok} from "./AddLombok";
+import {addPost} from "./AddPOST";
+import {addPut} from "./AddPUT";
 import {addRepository} from "./AddRepository";
 import {addResource} from "./AddResource";
 import {addService} from "./AddService";
@@ -43,6 +45,17 @@ export class ApiForBean implements EditProject {
         required: true,
     })
     public basePackage: string;
+
+    @Parameter({
+        displayName: "Methods",
+        description: "All methods you want implemented",
+        pattern: Pattern.any,
+        validInput: "Comma separated http methods e.g. 'GET,POST'",
+        minLength: 0,
+        maxLength: 100,
+        required: false,
+    })
+    public methods: string = "PUT,POST,GET";
 
     @Parameter({
         displayName: "Module name",
@@ -166,7 +179,7 @@ export class ApiForBean implements EditProject {
         this.addConverter(project);
         this.addService(project);
         this.addResource(project);
-        this.addGet(project);
+        this.addMethods(project);
         this.addSwagger(project);
     }
 
@@ -297,16 +310,58 @@ export class ApiForBean implements EditProject {
 
         addResource.edit(project);
     }
+    
+    private addMethods(project: Project) {
+
+        this.methods.split(",").forEach(method => {
+            switch (method) {
+                case "GET": {
+                    this.addGet(project);
+                    break;
+                }
+                case "POST": {
+                    this.addPost(project);
+                    break;
+                }
+                case "PUT": {
+                    this.addPut(project);
+                    break;
+                }
+            }
+        });
+    }
 
     private addGet(project: Project) {
 
-        addGET.className = this.className;
-        addGET.basePackage = this.basePackage;
+        addGet.className = this.className;
+        addGet.basePackage = this.basePackage;
         if (this.apiModule !== "") {
-            addGET.module = this.apiModule;
+            addGet.module = this.apiModule;
         }
 
-        addGET.edit(project);
+        addGet.edit(project);
+    }
+
+    private addPost(project: Project) {
+
+        addPost.className = this.className;
+        addPost.basePackage = this.basePackage;
+        if (this.apiModule !== "") {
+            addPost.module = this.apiModule;
+        }
+
+        addPost.edit(project);
+    }
+
+    private addPut(project: Project) {
+
+        addPut.className = this.className;
+        addPut.basePackage = this.basePackage;
+        if (this.apiModule !== "") {
+            addPut.module = this.apiModule;
+        }
+
+        addPut.edit(project);
     }
 
     private addSwagger(project: Project) {

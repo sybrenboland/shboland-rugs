@@ -79,7 +79,7 @@ export function updatePom(project: Project): void {
         return getObjectCount();
     }
     `;
-    javaFunctions.addFunction(certainFile, newFunction);
+    javaFunctions.addFunction(certainFile, "findNumberOfBeans", newFunction);
 
     ////////////////////////////////////////
     // AddAnnotationToClass

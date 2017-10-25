@@ -83,7 +83,7 @@ export class AddGET implements EditProject {
 
         const path = basePath + "/resource/I" + this.className + "Controller.java";
         const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
+        javaFunctions.addFunction(file, "get" + this.className, rawJavaMethod);
 
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.PathVariable");
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestMethod");
@@ -108,7 +108,7 @@ export class AddGET implements EditProject {
 
         const path = basePath + "/resource/" + this.className + "Controller.java";
         const file: File = project.findFile(path);
-        javaFunctions.addFunction(file, rawJavaMethod);
+        javaFunctions.addFunction(file, "get" + this.className, rawJavaMethod);
 
         javaFunctions.addImport(file, "java.util.Optional");
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.PathVariable");
@@ -130,11 +130,11 @@ export function addServiceMethodFetchBean(project: Project, className: string, b
 
     const path = basePath + "/service/" + className + "Service.java";
     const file: File = project.findFile(path);
-    javaFunctions.addFunction(file, rawJavaMethod);
+    javaFunctions.addFunction(file, "fetch" + className, rawJavaMethod);
 
     javaFunctions.addImport(file, "java.util.Optional");
     javaFunctions.addImport(file, basePackage + ".domain.Json" + className);
     javaFunctions.addImport(file, basePackage + ".db.hibernate.bean." + className);
 }
 
-export const addGET = new AddGET();
+export const addGet = new AddGET();
