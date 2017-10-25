@@ -72,23 +72,25 @@ export class AddLiquibase implements EditProject {
         const liquibaseDependency = `            <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
-                <version>${this.liquibaseVersion}</version>
+                <version>\${liquibase.version}</version>
                 <scope>runtime</scope>
             </dependency>`;
 
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependencyManagementDependency("org.liquibase", "liquibase-core", liquibaseDependency);
+            pom.addOrReplaceProperty("liquibase.version", this.liquibaseVersion);
         });
 
         const postgresDependency = `            <dependency>
                 <groupId>postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>${this.postgresVersion}</version>
+                <version>\${postgres.version}</version>
                 <scope>runtime</scope>
             </dependency>`;
 
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependencyManagementDependency("postgresql", "postgresql", postgresDependency);
+            pom.addOrReplaceProperty("postgres.version", this.postgresVersion);
         });
 
         // Module pom

@@ -62,21 +62,23 @@ export class AddSwagger implements EditProject {
         const swagger2Dependency = `            <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
-                <version>${this.version}</version>
+                <version>\${swagger.version}</version>
             </dependency>`;
 
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependencyManagementDependency("io.springfox", "springfox-swagger2", swagger2Dependency);
+            pom.addOrReplaceProperty("swagger.version", this.version);
         });
 
         const swaggerUiDependency = `            <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
-                <version>${this.version}</version>
+                <version>\${swagger.version}</version>
             </dependency>`;
 
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependencyManagementDependency("io.springfox", "springfox-swagger-ui", swaggerUiDependency);
+            pom.addOrReplaceProperty("swagger.version", this.version);
         });
 
         // Module pom

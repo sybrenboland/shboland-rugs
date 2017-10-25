@@ -74,7 +74,7 @@ export class AddDomainClass implements EditProject {
         const jacksonDependency = `            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${this.version}</version>
+                <version>\${jackson.version}</version>
             </dependency>`;
 
         const eng: PathExpressionEngine = project.context.pathExpressionEngine;
@@ -85,6 +85,7 @@ export class AddDomainClass implements EditProject {
                 "jackson-annotations",
                 jacksonDependency,
             );
+            pom.addOrReplaceProperty("jackson.version", this.version);
         });
 
         // Module pom

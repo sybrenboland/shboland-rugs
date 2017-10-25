@@ -52,7 +52,7 @@ export class AddLombok implements EditProject {
         const lombokDependency = `            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>${this.version}</version>
+                <version>\${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>`;
 
@@ -60,6 +60,7 @@ export class AddLombok implements EditProject {
 
         eng.with<Pom>(project, "/Pom()", pom => {
             pom.addOrReplaceDependencyManagementDependency("org.projectlombok", "lombok", lombokDependency);
+            pom.addOrReplaceProperty("lombok.version", this.version);
         });
 
         // Module pom
