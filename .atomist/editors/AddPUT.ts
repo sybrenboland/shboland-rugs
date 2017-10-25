@@ -22,7 +22,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-@Editor("AddPUT", "adds REST put method")
+// @Editor("AddPUT", "adds REST put method")
 @Tags("rug", "api", "AddPUT", "shboland")
 export class AddPUT implements EditProject {
     @Parameter({

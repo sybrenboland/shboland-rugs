@@ -21,7 +21,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-@Editor("AddGET", "adds REST get method")
+// @Editor("AddGET", "adds REST get method")
 @Tags("rug", "api", "GET", "shboland")
 export class AddGET implements EditProject {
     @Parameter({

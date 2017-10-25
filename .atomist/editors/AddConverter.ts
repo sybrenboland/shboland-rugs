@@ -7,7 +7,7 @@ import {Pattern} from "@atomist/rug/operations/RugOperation";
  * AddConverter editor
  * - Adds converter shell class
  */
-@Editor("AddConverter", "adds converter class")
+// @Editor("AddConverter", "adds converter class")
 @Tags("rug", "api", "convert", "shboland")
 export class AddConverter implements EditProject {
     @Parameter({

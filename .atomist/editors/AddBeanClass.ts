@@ -11,7 +11,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds hibernate bean class
  * - Adds liquibase changeset
  */
-@Editor("AddBeanClass", "adds hibernate bean class")
+// @Editor("AddBeanClass", "adds hibernate bean class")
 @Tags("rug", "hibernate", "bean", "shboland")
 export class AddBeanClass implements EditProject {
     @Parameter({

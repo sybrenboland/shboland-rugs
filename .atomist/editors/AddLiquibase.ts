@@ -11,7 +11,7 @@ import {fileFunctions} from "./FileFunctions";
  * AddLiquibase editor
  * - Adds maven dependencies
  */
-@Editor("AddLiquibase", "adds REST get method")
+// @Editor("AddLiquibase", "adds REST get method")
 @Tags("rug", "api", "GET", "shboland")
 export class AddLiquibase implements EditProject {
     @Parameter({

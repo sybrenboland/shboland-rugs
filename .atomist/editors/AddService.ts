@@ -7,7 +7,7 @@ import {Pattern} from "@atomist/rug/operations/RugOperation";
  * AddService editor
  * - Adds service shell class
  */
-@Editor("AddService", "adds service class")
+// @Editor("AddService", "adds service class")
 @Tags("rug", "api", "service", "shboland")
 export class AddService implements EditProject {
     @Parameter({

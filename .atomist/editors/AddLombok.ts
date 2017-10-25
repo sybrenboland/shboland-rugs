@@ -14,7 +14,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Adds imports
  * - Adds Annotations
  */
-@Editor("AddLombok", "adds ")
+// @Editor("AddLombok", "adds ")
 @Tags("rug", "lombok", "maven", "shboland")
 export class AddLombok implements EditProject {
     @Parameter({

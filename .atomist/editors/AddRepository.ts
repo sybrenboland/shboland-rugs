@@ -10,7 +10,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds maven dependencies
  * - Adds repository
  */
-@Editor("AddRepository", "adds repository")
+// @Editor("AddRepository", "adds repository")
 @Tags("rug", "api", "shell", "shboland")
 export class AddRepository implements EditProject {
     @Parameter({

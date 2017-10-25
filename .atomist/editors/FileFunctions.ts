@@ -11,7 +11,6 @@ export class FileFunctions {
 
         return file;
     }
-
 }
 
 export const fileFunctions = new FileFunctions();

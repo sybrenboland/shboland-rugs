@@ -13,7 +13,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds Api configuration file
  * - Add bootstrap.yml
  */
-@Editor("AddConfig", "adds additional config properties")
+// @Editor("AddConfig", "adds additional config properties")
 @Tags("rug", "api", "config", "shboland")
 export class AddConfig implements EditProject {
     @Parameter({

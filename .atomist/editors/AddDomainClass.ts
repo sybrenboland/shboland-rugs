@@ -12,7 +12,7 @@ import {fileFunctions} from "./FileFunctions";
  * - Adds maven dependencies
  * - Adds domain class
  */
-@Editor("AddDomainClass", "adds domain class")
+// @Editor("AddDomainClass", "adds domain class")
 @Tags("rug", "domain", "DTO", "shboland")
 export class AddDomainClass implements EditProject {
     @Parameter({
