@@ -8,7 +8,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 import {javaFunctions} from "./JavaClassFunctions";
 
 /**
- * AddGET editor
+ * AddPOST editor
  * - Adds maven dependencies
  * - Adds method to resource class and interface
  * - Adds method to service
@@ -21,9 +21,9 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-@Editor("AddGET", "adds REST get method")
-@Tags("rug", "api", "GET", "shboland")
-export class AddGET implements EditProject {
+@Editor("AddPOST", "adds REST post method")
+@Tags("rug", "api", "POST", "shboland")
+export class AddPOST implements EditProject {
     @Parameter({
         displayName: "Class name",
         description: "Name of the class we want to add",
@@ -64,7 +64,7 @@ export class AddGET implements EditProject {
         this.addDependencies(project);
         this.addResourceInterfaceMethod(project, basePath);
         this.addResourceClassMethod(project, basePath);
-        addServiceMethodFetchBean(project, this.className, this.basePackage, basePath);
+        this.addServiceMethod(project, basePath);
     }
 
     private addDependencies(project: Project): void {
@@ -77,15 +77,15 @@ export class AddGET implements EditProject {
 
     private addResourceInterfaceMethod(project: Project, basePath: string): void {
 
-        const rawJavaMethod = `
-    @RequestMapping(path = "/{${this.className.toLowerCase()}Id}", method = RequestMethod.GET)
-    ResponseEntity<Json${this.className}> get${this.className}(@PathVariable long ${this.className.toLowerCase()}Id);`;
+        const rawJavaMethod = `    
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    ResponseEntity post${this.className}(@RequestBody Json${this.className} ${this.className.toLowerCase()});`;
 
         const path = basePath + "/resource/I" + this.className + "Controller.java";
         const file: File = project.findFile(path);
         javaFunctions.addFunction(file, rawJavaMethod);
 
-        javaFunctions.addImport(file, "org.springframework.web.bind.annotation.PathVariable");
+        javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestBody");
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestMethod");
         javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestMapping");
         javaFunctions.addImport(file, "org.springframework.http.ResponseEntity");
@@ -96,45 +96,45 @@ export class AddGET implements EditProject {
 
         const rawJavaMethod = `
     @Override
-    public ResponseEntity<Json${this.className}> get${this.className}` +
-            `(@PathVariable long ${this.className.toLowerCase()}Id) {
-        Optional<Json${this.className}> ${this.className.toLowerCase()}Optional = ` +
-            `${this.className.toLowerCase()}Service.fetch${this.className}(${this.className.toLowerCase()}Id);
+    public ResponseEntity post${this.className}(@RequestBody Json${this.className} json${this.className}) {
+        Json${this.className} new${this.className} = ` +
+            `${this.className.toLowerCase()}Service.create${this.className}(json${this.className});
 
-        return ${this.className.toLowerCase()}Optional.isPresent() ?
-                ResponseEntity.ok(${this.className.toLowerCase()}Optional.get()) :
-                ResponseEntity.notFound().build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(new${this.className}.getId()).toUri();
+
+        return ResponseEntity.created(location).build();
     }`;
 
         const path = basePath + "/resource/" + this.className + "Controller.java";
         const file: File = project.findFile(path);
         javaFunctions.addFunction(file, rawJavaMethod);
 
-        javaFunctions.addImport(file, "java.util.Optional");
-        javaFunctions.addImport(file, "org.springframework.web.bind.annotation.PathVariable");
+        javaFunctions.addImport(file, "java.net.URI");
+        javaFunctions.addImport(file, "org.springframework.web.servlet.support.ServletUriComponentsBuilder");
+        javaFunctions.addImport(file, "org.springframework.web.bind.annotation.RequestBody");
         javaFunctions.addImport(file, "org.springframework.http.ResponseEntity");
         javaFunctions.addImport(file, this.basePackage + ".domain.Json" + this.className);
     }
-}
 
-export function addServiceMethodFetchBean(project: Project, className: string, basePackage: string, basePath: string) {
+    private addServiceMethod(project: Project, basePath: string): void {
 
-    const rawJavaMethod = `
-    public Optional<Json${className}> fetch${className}(long ${className.toLowerCase()}Id) {
-        ${className} ${className.toLowerCase()} = ` +
-        `${className.toLowerCase()}Repository.findOne(${className.toLowerCase()}Id);
+        const rawJavaMethod = `
+    public Json${this.className} create${this.className}(Json${this.className} json${this.className}) {
+        ${this.className} ${this.className.toLowerCase()} = ` +
+            `${this.className.toLowerCase()}Repository.save(new ${this.className}());
 
-        return ${className.toLowerCase()} == null ? Optional.empty() : ` +
-        `Optional.of(${className.toLowerCase()}Converter.toJson(${className.toLowerCase()}));
+        return ${this.className.toLowerCase()}Converter.toJson(${this.className.toLowerCase()});
     }`;
 
-    const path = basePath + "/service/" + className + "Service.java";
-    const file: File = project.findFile(path);
-    javaFunctions.addFunction(file, rawJavaMethod);
+        const path = basePath + "/service/" + this.className + "Service.java";
+        const file: File = project.findFile(path);
+        javaFunctions.addFunction(file, rawJavaMethod);
 
-    javaFunctions.addImport(file, "java.util.Optional");
-    javaFunctions.addImport(file, basePackage + ".domain.Json" + className);
-    javaFunctions.addImport(file, basePackage + ".db.hibernate.bean." + className);
+        javaFunctions.addImport(file, this.basePackage + ".domain.Json" + this.className);
+        javaFunctions.addImport(file, this.basePackage + ".db.hibernate.bean." + this.className);
+    }
 }
 
-export const addGET = new AddGET();
+export const addPost = new AddPOST();
