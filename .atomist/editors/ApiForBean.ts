@@ -12,12 +12,12 @@ import {addLombok} from "./AddLombok";
 import {addRepository} from "./AddRepository";
 import {addResource} from "./AddResource";
 import {addService} from "./AddService";
-import {setSpringBootVersion} from "./AddSpringBootParent";
+import {addSpringBoot} from "./AddSpringBoot";
 import {addSwagger} from "./AddSwagger";
 
 /**
  * ApiForBean editor
- * -
+ * - Adds chain from persistence to api for a bean
  */
 @Editor("ApiForBean", "Add whole api to persistence chain")
 @Tags("rug", "api", "persistence", "domain", "shboland")
@@ -171,10 +171,14 @@ export class ApiForBean implements EditProject {
     }
 
     private setSpringBootVersion(project: Project) {
-        if (this.springBootVersion !== "") {
-            setSpringBootVersion.version = this.springBootVersion;
+        addSpringBoot.basePackage = this.basePackage;
+        if (this.apiModule !== "") {
+            addSpringBoot.apiModule = this.apiModule;
         }
-        setSpringBootVersion.edit(project);
+        if (this.springBootVersion !== "") {
+            addSpringBoot.version = this.springBootVersion;
+        }
+        addSpringBoot.edit(project);
     }
     
     private addConfigFiles(project: Project) {
@@ -307,7 +311,6 @@ export class ApiForBean implements EditProject {
 
     private addSwagger(project: Project) {
 
-        addSwagger.className = this.className;
         addSwagger.basePackage = this.basePackage;
         if (this.apiModule !== "") {
             addSwagger.apiModule = this.apiModule;

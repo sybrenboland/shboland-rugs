@@ -16,17 +16,6 @@ import {fileFunctions} from "./FileFunctions";
 @Tags("rug", "api", "swagger", "shboland")
 export class AddSwagger implements EditProject {
     @Parameter({
-        displayName: "Class name",
-        description: "Name of the class we want to add",
-        pattern: Pattern.java_class,
-        validInput: "Java class name",
-        minLength: 1,
-        maxLength: 100,
-        required: true,
-    })
-    public className: string;
-
-    @Parameter({
         displayName: "Base package name",
         description: "Name of the base package in witch we want to add",
         pattern: Pattern.java_package,
@@ -106,15 +95,15 @@ export class AddSwagger implements EditProject {
             + "/configuration/SwaggerConfig.java";
         const rawSwaggerConfigFile = `package ${this.basePackage}.configuration;
 
+import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 @EnableSwagger2
@@ -126,13 +115,13 @@ public class SwaggerConfig {
 				.groupName("API")
 				.apiInfo(apiInfo())
 				.select()
-				.paths(regex("/${this.className.toLowerCase()}s.*"))
+				.apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
 				.build();
 	}
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("${this.className} API")
+				.title("API")
 				.build();
 	}
 
