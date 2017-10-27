@@ -2,12 +2,13 @@ import {Project} from "@atomist/rug/model/Project";
 import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddConverter editor
  * - Adds converter shell class
  */
-// @Editor("AddConverter", "adds converter class")
+@Editor("AddConverter", "adds converter class")
 @Tags("rug", "api", "convert", "shboland")
 export class AddConverter implements EditProject {
     @Parameter({
@@ -44,7 +45,7 @@ export class AddConverter implements EditProject {
     public module: string = "api";
 
     public edit(project: Project) {
-        const basePath = this.module + "/src/main/java/" + this.basePackage.replace(/\./gi, "/");
+        const basePath = this.module + "/src/main/java/" + fileFunctions.toPath(this.basePackage);
 
         this.addConverterClass(project, basePath);
     }

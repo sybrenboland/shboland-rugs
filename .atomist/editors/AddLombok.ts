@@ -5,8 +5,8 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {fileFunctions} from "./FileFunctions";
-import {javaFunctions} from "./JavaClassFunctions";
+import {fileFunctions} from "./functions/FileFunctions";
+import {javaFunctions} from "./functions/JavaClassFunctions";
 
 /**
  * AddLombok editor
@@ -14,7 +14,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Adds imports
  * - Adds Annotations
  */
-// @Editor("AddLombok", "adds ")
+@Editor("AddLombok", "adds ")
 @Tags("rug", "lombok", "maven", "shboland")
 export class AddLombok implements EditProject {
     @Parameter({

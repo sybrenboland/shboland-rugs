@@ -5,7 +5,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {javaFunctions} from "./JavaClassFunctions";
+import {javaFunctions} from "./functions/JavaClassFunctions";
 
 /**
  * AddPOST editor
@@ -21,7 +21,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-// @Editor("AddPOST", "adds REST post method")
+@Editor("AddPOST", "adds REST post method")
 @Tags("rug", "api", "POST", "shboland")
 export class AddPOST implements EditProject {
     @Parameter({

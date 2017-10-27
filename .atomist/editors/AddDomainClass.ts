@@ -5,14 +5,14 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {fileFunctions} from "./FileFunctions";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddDomainClass editor
  * - Adds maven dependencies
  * - Adds domain class
  */
-// @Editor("AddDomainClass", "adds domain class")
+@Editor("AddDomainClass", "adds domain class")
 @Tags("rug", "domain", "DTO", "shboland")
 export class AddDomainClass implements EditProject {
     @Parameter({
@@ -62,7 +62,7 @@ export class AddDomainClass implements EditProject {
     public edit(project: Project) {
 
         const basePath = this.module + "/src/main";
-        const pathClass = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
+        const pathClass = basePath + "/java/" + fileFunctions.toPath(this.basePackage)
             + "/domain/Json" + this.className + ".java";
 
         this.addDependencies(project);

@@ -4,6 +4,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddBeanClass editor
@@ -11,7 +12,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds hibernate bean class
  * - Adds liquibase changeset
  */
-// @Editor("AddBeanClass", "adds hibernate bean class")
+@Editor("AddBeanClass", "adds hibernate bean class")
 @Tags("rug", "hibernate", "bean", "shboland")
 export class AddBeanClass implements EditProject {
     @Parameter({
@@ -61,7 +62,7 @@ export class AddBeanClass implements EditProject {
     public edit(project: Project) {
 
         const basePath = this.module + "/src/main";
-        const pathClass = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
+        const pathClass = basePath + "/java/" + fileFunctions.toPath(this.basePackage)
             + "/db/hibernate/bean/" + this.className + ".java";
         const pathChangeset = basePath + "/resources/liquibase/release/" + this.release + "/create-"
             + this.className.toLowerCase() + ".xml";

@@ -4,6 +4,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddConfig editor
@@ -13,7 +14,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds Api configuration file
  * - Add bootstrap.yml
  */
-// @Editor("AddConfig", "adds additional config properties")
+@Editor("AddConfig", "adds additional config properties")
 @Tags("rug", "api", "config", "shboland")
 export class AddConfig implements EditProject {
     @Parameter({
@@ -78,7 +79,7 @@ export class AddConfig implements EditProject {
 
     private addPersistenceConfig(project: Project) {
         const configPath = this.persistenceModule + "/src/main/java/"
-            + this.basePackage.replace(/\./gi, "/") + "/configuration/PersistenceConfiguration.java";
+            + fileFunctions.toPath(this.basePackage) + "/configuration/PersistenceConfiguration.java";
         const rawJavaFileContent = `package ${this.basePackage}.configuration;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -96,7 +97,7 @@ public class PersistenceConfiguration {
 
     private addDomainConfig(project: Project) {
         const configPath = this.domainModule + "/src/main/java/"
-            + this.basePackage.replace(/\./gi, "/") + "/configuration/DomainConfiguration.java";
+            + fileFunctions.toPath(this.basePackage) + "/configuration/DomainConfiguration.java";
         const rawJavaFileContent = `package ${this.basePackage}.configuration;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -114,7 +115,7 @@ public class DomainConfiguration {
 
     private addApiConfig(project: Project) {
         const configPath = this.apiModule + "/src/main/java/"
-            + this.basePackage.replace(/\./gi, "/") + "/configuration/ApiConfiguration.java";
+            + fileFunctions.toPath(this.basePackage) + "/configuration/ApiConfiguration.java";
         const rawJavaFileContent = `package ${this.basePackage}.configuration;
 
 import org.springframework.context.annotation.Configuration;

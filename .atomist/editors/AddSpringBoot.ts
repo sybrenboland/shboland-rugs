@@ -10,7 +10,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Sets spring boot version of maven parent
  * - Add spring boot application class
  */
-// @Editor("AddSpringBoot", "sets spring boot version")
+@Editor("AddSpringBoot", "sets spring boot version")
 @Tags("rug", "spring", "boot", "shboland")
 export class AddSpringBoot implements EditProject {
     @Parameter({
@@ -55,6 +55,8 @@ export class AddSpringBoot implements EditProject {
         const eng: PathExpressionEngine = project.context.pathExpressionEngine;
 
         eng.with<Pom>(project, "/Pom()", pom => {
+            pom.setParentGroupId("org.springframework.boot");
+            pom.setParentArtifactId("spring-boot-starter-parent");
             pom.setParentVersion(this.version);
             pom.addOrReplaceDependency("org.springframework.boot", "spring-boot-starter-web");
         });

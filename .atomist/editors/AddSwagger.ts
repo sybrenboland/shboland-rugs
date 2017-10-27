@@ -5,7 +5,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {fileFunctions} from "./FileFunctions";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddSwagger editor
@@ -94,7 +94,7 @@ export class AddSwagger implements EditProject {
     private addSwaggerConfigFile(project: Project, basePath: string): void {
 
         const pathSwaggerConfig = basePath + "/java/" + this.basePackage.replace(/\./gi, "/")
-            + "/configuration/SwaggerConfig.java";
+            + "/configuration/SwaggerConfiguration.java";
         const rawSwaggerConfigFile = `package ${this.basePackage}.configuration;
 
 import com.google.common.base.Predicates;
@@ -109,7 +109,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {
+public class SwaggerConfiguration {
 
 	@Bean
 	public Docket postsApi() {

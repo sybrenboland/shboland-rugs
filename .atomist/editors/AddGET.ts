@@ -5,7 +5,7 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {javaFunctions} from "./JavaClassFunctions";
+import {javaFunctions} from "./functions/JavaClassFunctions";
 
 /**
  * AddGET editor
@@ -21,7 +21,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-// @Editor("AddGET", "adds REST get method")
+@Editor("AddGET", "adds REST get method")
 @Tags("rug", "api", "GET", "shboland")
 export class AddGET implements EditProject {
     @Parameter({

@@ -5,13 +5,13 @@ import {Editor, Parameter, Tags} from "@atomist/rug/operations/Decorators";
 import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
-import {fileFunctions} from "./FileFunctions";
+import {fileFunctions} from "./functions/FileFunctions";
 
 /**
  * AddLiquibase editor
  * - Adds maven dependencies
  */
-// @Editor("AddLiquibase", "adds REST get method")
+@Editor("AddLiquibase", "adds REST get method")
 @Tags("rug", "api", "GET", "shboland")
 export class AddLiquibase implements EditProject {
     @Parameter({

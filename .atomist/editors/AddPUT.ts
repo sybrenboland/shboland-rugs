@@ -6,7 +6,7 @@ import {EditProject} from "@atomist/rug/operations/ProjectEditor";
 import {Pattern} from "@atomist/rug/operations/RugOperation";
 import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
 import {addServiceMethodFetchBean} from "./AddGET";
-import {javaFunctions} from "./JavaClassFunctions";
+import {javaFunctions} from "./functions/JavaClassFunctions";
 
 /**
  * AddPUT editor
@@ -22,7 +22,7 @@ import {javaFunctions} from "./JavaClassFunctions";
  * - Service class
  * - Repository
  */
-// @Editor("AddPUT", "adds REST put method")
+@Editor("AddPUT", "adds REST put method")
 @Tags("rug", "api", "AddPUT", "shboland")
 export class AddPUT implements EditProject {
     @Parameter({

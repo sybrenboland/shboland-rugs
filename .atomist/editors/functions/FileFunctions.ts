@@ -11,6 +11,10 @@ export class FileFunctions {
 
         return file;
     }
+
+    public toPath(packageName: string) {
+        return packageName.replace(/\./gi, "/");
+    }
 }
 
 export const fileFunctions = new FileFunctions();

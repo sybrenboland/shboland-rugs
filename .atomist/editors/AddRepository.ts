@@ -10,7 +10,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds maven dependencies
  * - Adds repository
  */
-// @Editor("AddRepository", "adds repository")
+@Editor("AddRepository", "adds repository")
 @Tags("rug", "api", "shell", "shboland")
 export class AddRepository implements EditProject {
     @Parameter({
@@ -51,7 +51,7 @@ export class AddRepository implements EditProject {
         const basePath = this.module + "/src/main/java/" + this.basePackage.replace(/\./gi, "/");
 
         this.addDependencies(project);
-        this.addConverterClass(project, basePath);
+        this.addRepositoryClass(project, basePath);
     }
 
     private addDependencies(project: Project): void {
@@ -62,7 +62,7 @@ export class AddRepository implements EditProject {
         });
     }
 
-    private addConverterClass(project: Project, basePath: string): void {
+    private addRepositoryClass(project: Project, basePath: string): void {
 
         const rawJavaFileContent = `package ${this.basePackage}.db.repo;
 

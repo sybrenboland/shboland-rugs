@@ -10,7 +10,7 @@ import {PathExpressionEngine} from "@atomist/rug/tree/PathExpression";
  * - Adds maven dependencies
  * - Adds resource shell class and interface
  */
-// @Editor("AddResource", "adds resource class and interface")
+@Editor("AddResource", "adds resource class and interface")
 @Tags("rug", "api", "resource", "shboland")
 export class AddResource implements EditProject {
     @Parameter({
